@@ -21,6 +21,8 @@ def main():
     pygame.display.set_caption('Sudoku')
     screen.fill(pygame.Color('white'))
 
+    gamestate.generateNewSudoku()
+
     squareSelected = ()
 
     mainLoop = True
@@ -52,20 +54,34 @@ def drawGameState(screen, gamestate, font):
     drawNumbers(screen, gamestate, font)
 
 def drawBoard(screen):
-    colors = [pygame.Color("white"), pygame.Color("gray")]
+
     for r in range(DIMENSION):
         for c in range(DIMENSION):
-            color = colors[((r + c) % 2)]
-            pygame.draw.rect(screen, color, pygame.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+            thickness = 1
+            squareOutline = pygame.Rect(
+                c*SQ_SIZE, 
+                r*SQ_SIZE, 
+                SQ_SIZE, 
+                SQ_SIZE)
+            squareInner = pygame.Rect(
+                c*SQ_SIZE + thickness - thickness*(c%3), 
+                r*SQ_SIZE + thickness - thickness*(r%3), 
+                SQ_SIZE - 2*thickness, 
+                SQ_SIZE - 2*thickness)
+            pygame.draw.rect(screen, pygame.Color("black"), squareOutline)
+            pygame.draw.rect(screen, pygame.Color("white"), squareInner)
 
 def drawNumbers(screen, gamestate, font):
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             square = gamestate.board[r][c]
-            if( square != '?'):
-                textsurface = font.render(square, True, (80, 80, 80))
+            if( square != '?' ):
+                if( gamestate.givenSpots.__contains__((r,c)) ):
+                    textsurface = font.render(square, True, (0, 0, 0))
+                else: 
+                    textsurface = font.render(square, True, (80, 80, 80))
                 screen.blit(textsurface, pygame.Rect(c*SQ_SIZE + (SQ_SIZE // 4), r*SQ_SIZE + (SQ_SIZE // 8), SQ_SIZE, SQ_SIZE))
-
+                
 
 
 main()

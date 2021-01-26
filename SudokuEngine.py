@@ -3,7 +3,7 @@ class Gamestate():
     def __init__(self):
 
         self.board = [
-            ['1', '2', '3', '?', '?', '?', '?', '?', '?'],
+            ['1', '?', '?', '?', '?', '?', '?', '?', '?'],
             ['?', '?', '?', '?', '?', '?', '?', '?', '?'],
             ['?', '?', '?', '?', '?', '?', '?', '?', '?'],
             ['?', '?', '?', '?', '?', '?', '?', '?', '?'],
@@ -13,9 +13,13 @@ class Gamestate():
             ['?', '?', '?', '?', '?', '?', '?', '?', '?'],
             ['?', '?', '?', '?', '?', '?', '?', '?', '?']
         ]
+        self.givenSpots = {(0,0)}
 
-        self.solution = []
-        self.givenSpots = []
+    def generateNewSudoku(self):
+        for row in range( 0, len(self.board) ):
+            for col in range( 0, len(self.board) ):
+                string = str(col)
+                self.board[row][col] = string
 
     def isEmptySpot(self, squareSelected):
         if(self.board[squareSelected[0]][squareSelected[1]] == '?'):
