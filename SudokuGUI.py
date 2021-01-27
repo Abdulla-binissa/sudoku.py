@@ -43,14 +43,20 @@ def main():
                 
                 if DIGITS.__contains__(key):
                     gamestate.setSpot(key, squareSelected)
+                
+                else: 
+                    print(gamestate.conflictingSquares)
 
-                      
         drawGameState(screen, gamestate, font)
         clock.tick(MAX_FPS)
         pygame.display.flip()
 
 def drawGameState(screen, gamestate, font):
     drawBoard(screen) 
+    for i in range(0, 2):
+        for j in range(0, 2):
+            squareSelected = (i*3, j*3)
+            gamestate.checkQuadrant(squareSelected)
     drawNumbers(screen, gamestate, font)
 
 def drawBoard(screen):
@@ -76,7 +82,7 @@ def drawNumbers(screen, gamestate, font):
         for c in range(DIMENSION):
             square = gamestate.board[r][c]
             if( square != '?' ):
-                if( gamestate.givenSpots.__contains__((r,c)) ):
+                if( gamestate.givenSquares.__contains__((r,c)) ):
                     textsurface = font.render(square, True, (0, 0, 0))
                 else: 
                     textsurface = font.render(square, True, (80, 80, 80))
