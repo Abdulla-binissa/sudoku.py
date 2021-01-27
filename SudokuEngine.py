@@ -61,30 +61,64 @@ class Gamestate():
     def setSpot(self, number, squareSelected):
         self.board[squareSelected[0]][squareSelected[1]] = number
 
-    #def checkSquares(self, currentSquare, checkSquare):
 
     def checkQuadrant(self, squareSelected):
         squareValue = self.board[squareSelected[0]][squareSelected[1]]
-        if squareValue == "?": 
-            return
+        if squareValue == "?": return
 
-        for r in range(0, 2):
-            for c in range(0, 2):
-                row = squareSelected[0] // 3
-                col = squareSelected[1] // 3
-                sameSquare = True if (squareSelected[0] == row+r and squareSelected[1] == col+c) else False
-                testSquareValue = self.board[row+r][col+c]
-                if( squareValue == testSquareValue and not sameSquare):
-                    print(
-                        "(", squareSelected[0], ", ", squareSelected[1], ")", squareValue, 
-                        "(", row+r, ", ", col+c, ")", testSquareValue )
-                    self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
-                    self.conflictingSquares.append((row+r, col+c))
+        for r in range(0, 3):
+            for c in range(0, 3):
+                testRow = (squareSelected[0] // 3)*3 + r
+                testCol = (squareSelected[1] // 3)*3 + c
+                if (squareSelected[0] == testRow and squareSelected[1] == testCol): 
+                    continue                
+                testSquareValue = self.board[testRow][testCol]
+                if( squareValue == testSquareValue ):
+                    if not self.conflictingSquares.__contains__((squareSelected[0], squareSelected[1])):
+                        self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
+                    if not self.conflictingSquares.__contains__((testRow, testCol)):
+                        self.conflictingSquares.append((testRow, testCol))
+                    return True
+        return False
 
     def checkLines(self, squareSelected):
-        for row in range(0, 8):
-           for col in range(0, 8):
-               self.checkQuadrant(squareSelected)
-                
-                
+        squareValue = self.board[squareSelected[0]][squareSelected[1]]
+        testRow = squareSelected[0]
+        for testCol in range(0, 9):
+            testSquareValue = self.board[testRow][testCol]
+            if (squareSelected[0] == testRow and squareSelected[1] == testCol): 
+                continue
+            if( squareValue == testSquareValue ):
+                if not self.conflictingSquares.__contains__((squareSelected[0], squareSelected[1])):
+                    self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
+                if not self.conflictingSquares.__contains__((testRow, testCol)):
+                    self.conflictingSquares.append((testRow, testCol))
+                return True
+        testCol = squareSelected[1]
+        for testRow in range(0, 9):
+            testSquareValue = self.board[testRow][testCol]
+            if (squareSelected[0] == testRow and squareSelected[1] == testCol): 
+                continue
+            if( squareValue == testSquareValue ):
+                if not self.conflictingSquares.__contains__((squareSelected[0], squareSelected[1])):
+                    self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
+                if not self.conflictingSquares.__contains__((testRow, testCol)):
+                    self.conflictingSquares.append((testRow, testCol))
+                    return True
+        return False
+
+    def removeDuplicates(self):
+        for square in self.conflictingSquares:
+            if not self.checkQuadrant(square) and not self.checkLines(square) :
+                self.conflictingSquares.remove(square)
+
+
+    def setDuplicates(self, squareSelected):
+        self.checkQuadrant(squareSelected)
+        self.checkLines(squareSelected)
+        #if not checkQuadrant and not checkLines :
+        #    self.removeDuplicates(squareSelected)
+            
+
+
                 

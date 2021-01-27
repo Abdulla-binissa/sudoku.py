@@ -43,6 +43,8 @@ def main():
                 
                 if DIGITS.__contains__(key):
                     gamestate.setSpot(key, squareSelected)
+                    gamestate.setDuplicates(squareSelected)
+                    gamestate.removeDuplicates()
                 
                 else: 
                     print(gamestate.conflictingSquares)
@@ -53,14 +55,10 @@ def main():
 
 def drawGameState(screen, gamestate, font):
     drawBoard(screen) 
-    for i in range(0, 2):
-        for j in range(0, 2):
-            squareSelected = (i*3, j*3)
-            gamestate.checkQuadrant(squareSelected)
+    drawConflictingHighlights(screen, gamestate)
     drawNumbers(screen, gamestate, font)
 
 def drawBoard(screen):
-
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             thickness = 1
@@ -87,7 +85,23 @@ def drawNumbers(screen, gamestate, font):
                 else: 
                     textsurface = font.render(square, True, (80, 80, 80))
                 screen.blit(textsurface, pygame.Rect(c*SQ_SIZE + (SQ_SIZE // 4), r*SQ_SIZE + (SQ_SIZE // 8), SQ_SIZE, SQ_SIZE))
-                
 
+def drawConflictingHighlights(screen, gamestate):
+    thickness = 1
+    s = pygame.Surface((SQ_SIZE - (2*thickness), SQ_SIZE - (2*thickness)))
+    s.set_alpha(60) # 0 - transparent ; 255 - opaque
+    s.fill(pygame.Color('red'))
+    for square in gamestate.conflictingSquares:
+        
+        r = square[0]
+        c = square[1]
+        screen.blit(s, pygame.Rect(
+            c*SQ_SIZE + thickness - thickness*(c%3), 
+            r*SQ_SIZE + thickness - thickness*(r%3), 
+            (SQ_SIZE - (2*thickness)), 
+            (SQ_SIZE - (2*thickness))))
 
 main()
+
+#for i in range(0, 9):
+#        print( (i // 3)*3 )
