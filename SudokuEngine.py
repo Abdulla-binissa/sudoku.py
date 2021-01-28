@@ -65,6 +65,7 @@ class Gamestate():
     def checkQuadrant(self, squareSelected):
         squareValue = self.board[squareSelected[0]][squareSelected[1]]
         if squareValue == "?": return
+        value = False
 
         for r in range(0, 3):
             for c in range(0, 3):
@@ -78,12 +79,13 @@ class Gamestate():
                         self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
                     if not self.conflictingSquares.__contains__((testRow, testCol)):
                         self.conflictingSquares.append((testRow, testCol))
-                    return True
-        return False
+                    value = True
+        return value
 
     def checkLines(self, squareSelected):
         squareValue = self.board[squareSelected[0]][squareSelected[1]]
         testRow = squareSelected[0]
+        value = False
         for testCol in range(0, 9):
             testSquareValue = self.board[testRow][testCol]
             if (squareSelected[0] == testRow and squareSelected[1] == testCol): 
@@ -93,7 +95,7 @@ class Gamestate():
                     self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
                 if not self.conflictingSquares.__contains__((testRow, testCol)):
                     self.conflictingSquares.append((testRow, testCol))
-                return True
+                value = True
         testCol = squareSelected[1]
         for testRow in range(0, 9):
             testSquareValue = self.board[testRow][testCol]
@@ -104,13 +106,17 @@ class Gamestate():
                     self.conflictingSquares.append((squareSelected[0], squareSelected[1]))
                 if not self.conflictingSquares.__contains__((testRow, testCol)):
                     self.conflictingSquares.append((testRow, testCol))
-                    return True
-        return False
+                value = True
+        return value
 
     def removeDuplicates(self):
-        for square in self.conflictingSquares:
-            if not self.checkQuadrant(square) and not self.checkLines(square) :
-                self.conflictingSquares.remove(square)
+        for square in self.conflictingSquares[::-1]:
+            checkQuadrant = self.checkQuadrant(square)
+            checkLines = self.checkLines(square)
+            print(square, checkQuadrant, checkLines)
+            if not checkQuadrant :
+                if not checkLines :
+                    self.conflictingSquares.remove(square)
 
 
     def setDuplicates(self, squareSelected):

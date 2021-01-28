@@ -44,9 +44,7 @@ def main():
                 if DIGITS.__contains__(key):
                     gamestate.setSpot(key, squareSelected)
                     gamestate.setDuplicates(squareSelected)
-                    gamestate.removeDuplicates()
-                
-                else: 
+                    gamestate.removeDuplicates() 
                     print(gamestate.conflictingSquares)
 
         drawGameState(screen, gamestate, font)
