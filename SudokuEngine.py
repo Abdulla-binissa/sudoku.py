@@ -113,7 +113,6 @@ class Gamestate():
         for square in self.conflictingSquares[::-1]:
             checkQuadrant = self.checkQuadrant(square)
             checkLines = self.checkLines(square)
-            print(square, checkQuadrant, checkLines)
             if not checkQuadrant :
                 if not checkLines :
                     self.conflictingSquares.remove(square)
@@ -122,8 +121,6 @@ class Gamestate():
     def setDuplicates(self, squareSelected):
         self.checkQuadrant(squareSelected)
         self.checkLines(squareSelected)
-        #if not checkQuadrant and not checkLines :
-        #    self.removeDuplicates(squareSelected)
             
 
 

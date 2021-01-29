@@ -45,7 +45,6 @@ def main():
                     gamestate.setSpot(key, squareSelected)
                     gamestate.setDuplicates(squareSelected)
                     gamestate.removeDuplicates() 
-                    print(gamestate.conflictingSquares)
 
         drawGameState(screen, gamestate, font)
         clock.tick(MAX_FPS)
@@ -90,7 +89,6 @@ def drawConflictingHighlights(screen, gamestate):
     s.set_alpha(60) # 0 - transparent ; 255 - opaque
     s.fill(pygame.Color('red'))
     for square in gamestate.conflictingSquares:
-        
         r = square[0]
         c = square[1]
         screen.blit(s, pygame.Rect(
@@ -100,6 +98,3 @@ def drawConflictingHighlights(screen, gamestate):
             (SQ_SIZE - (2*thickness))))
 
 main()
-
-#for i in range(0, 9):
-#        print( (i // 3)*3 )
